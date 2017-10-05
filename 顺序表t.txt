@@ -1,0 +1,251 @@
+#include<iostream>
+using namespace std;
+const int MaxSize = 100;
+template<typename DataType>
+class SeqList {
+private:
+	DataType data[MaxSize];
+	int length;
+public:
+	SeqList();
+	SeqList(DataType a[], int n);
+	void InsertNum(DataType a[], int n);
+	int Length();
+	DataType Get(int i);
+	void Locate(DataType x);
+	void Insert(int i, DataType x);
+	void Delete(int i);
+	void Print();
+	void LeftMove(int n);
+	void change();
+	void exchange();
+};
+//初始化表格无数据
+template<typename DataType>
+SeqList<DataType>::SeqList() {
+	length = 0;
+}
+//初始化表格有数据
+template<typename DataType>
+SeqList<DataType>::SeqList(DataType a[], int n) {
+	if (n <= 0)throw "能输入正确的数字吗？输入了非法的数值，长度需大于零";
+	else if (n > MaxSize)throw  "数据数量大于所能容纳的量";
+	for (int i = 0; i < n; i++) {
+		data[i] = a[i];
+	}
+	length = n;
+}
+//增添大量的数据
+template<typename DataType>
+void SeqList<DataType>::InsertNum(DataType a[], int n) {
+	if (n <= 0)	cout<<"能输入正确的数字吗？输入了非法的数值，长度需大于零"<<endl;
+	else if (n + length > MaxSize)cout<< "数据数量大于所能容纳的量"<<endl;
+	else {
+		for (int i = length; i < n + length; i++) {
+			data[i] = a[i];
+		}
+		length += n;
+	}
+}
+//输出长度
+template<typename DataType>
+int SeqList<DataType>::Length() {
+	return length;
+}
+//按位查找
+template<typename DataType>
+DataType SeqList<DataType>::Get(int i) {
+	if (i <= 0) cout<< "无效位置"<<endl;
+	else if (i > length) cout<<"无效位置"<<endl;
+	else return data[i - 1];
+}
+//输出值的位置
+template<typename DataType>
+void SeqList<DataType>::Locate(DataType x) {
+	bool judge = true;
+	int temp;
+	for (int i = 0; i < length; i++) {
+		if (data[i] == x) {
+			temp = i;
+			judge = false;
+			break;
+		}
+	}
+	if (judge) {
+		cout << "为此值的位置有 ";
+		for (int i = temp; i < length; i++) {
+			if (data[i] == x) {
+				cout << i + 1 << " ";
+			}
+		}
+		cout << endl;
+	}
+	else {
+		cout << "未找到该值所在的位置" << endl;
+	}
+}
+//插值;
+template<typename DataType>
+void SeqList<DataType>::Insert(int i, DataType x) {
+	if (i <= 0) cout<<"参数非法"<<endl;
+	else if (i > length) {
+		cout << "默认在" << length + 1 << "位置输入" << endl;
+		length++;
+		data[length - 1] = x;
+	}
+	else {
+		for (int j = length; j >= i; j--) {
+			data[j] = data[j - 1];
+		}
+		data[i - 1] = x;
+		length++;
+	}
+}
+//删除;
+template<typename DataType>
+void SeqList<DataType> ::Delete(int i) {
+	if (i <= 0) cout<<"为何要搞事，位置出错"<<endl;
+	else if (i > length) cout << "已经没有这钟操作了，没有这位置" << endl;
+	else {
+		for (int j = i - 1; j < length - 1; j++) {
+			data[j] = data[j + 1];
+		}
+		length--;
+	}
+}
+//打出来；
+template<typename DataType>
+void SeqList<DataType>::Print() {
+	if (length == 0) cout << "这个顺序表空空的" << endl;
+	else {
+		cout << "这个顺序表里有:";
+		for (int i = 0; i < length; i++) {
+			cout << data[i] << " ";
+		}
+	}
+	cout << endl;
+}
+//循环左移
+template<typename DataType>
+void SeqList<DataType>::LeftMove(int n) {
+	if (n <= 0) cout << "无效数字" << endl;
+	else {
+		for (int i = length; i < length + n; i++)
+			data[i] = data[i - length];
+		for (int i = n; i < length + n; i++) {
+			data[i-n] = data[i];
+		}
+	}
+}
+//变化奇数
+template<typename DataType>
+void SeqList<DataType>::change() {
+	int sum1 = 0, sum2 = 0;
+	int *a = new int[length], *b = new int[length];
+	for (int i = 0; i < length; i++) {
+		if (data[i] % 2 == 0) {
+			a[sum1] = data[i];
+			sum1++;
+		}
+		else {
+			b[sum2] = data[i];
+			sum2++;
+		}
+	}
+	for (int i = 0; i <sum1; i++) {
+		data[i] = b[i];
+	}
+	for (int i = sum1; i <length; i++) {
+		data[i] = a[i - sum1];
+	}
+	delete[]a;
+	delete[]b;
+}
+//就地逆转
+template<typename DataType>
+void SeqList<DataType>::exchange() {
+	for (int i = 0; i <length/2 ; i++) {
+		swap(data[i], data[length - i-1]);
+	}
+}
+int main() {
+	bool judge;
+	int n;
+	cout << "是否创建顺序表:1->创建,0->不创建(非零数字默认创建)" << endl;
+	cin >> judge;
+	if (!judge) {
+		cout << "程序结束" << endl;
+	}
+	else {
+		SeqList<int> seqlist;
+		cout << "创建了顺序表" << endl;
+		cout << "1.插入大量的数字" << endl;
+		cout << "2.在第N个位置插入值" << endl;
+		cout << "3.得到顺序表的长度" << endl;
+		cout << "4.按位置查找" << endl;
+		cout << "5.输出值位置" << endl;
+		cout << "6.按位置插入" << endl;
+		cout << "7.删掉某个位置的值" << endl;
+		cout << "8.输出顺序表的值" << endl;
+		cout << "9.左移到几位" << endl;
+		cout << "10.奇偶分离" << endl;
+		cout << "11.就地逆转" << endl;
+		int *temp, m1, m2;
+		while (true) {
+		cout << "输入相应的数字执行相应操作" << endl;
+			cin >> n;
+			switch (n) {
+			case 1:
+				cout << "请输入插入几个数" << endl;
+				int m;
+				cin >> m;
+				cout << "请输入值" << endl;
+				temp = new int[m];
+				for (int i = 0; i < m; i++)cin >> temp[i];
+				seqlist.InsertNum(temp,m);
+				delete[]temp;
+				break;
+			case 2:
+				cin >> m1>> m2;
+				seqlist.Insert(m1, m2);
+				break;
+			case 3:
+				cout << seqlist.Length() << endl;
+				break;
+			case 4:
+				cin >> m1;
+				seqlist.Get(m1);
+				break;
+			case 5:
+				cin >> m1;
+				seqlist.Locate(m1);
+				break;
+			case 6:
+				cout << "先输入位置，再输入值" << endl;
+				cin >> m1 >> m2;
+				seqlist.Insert(m1, m2);
+				break;
+			case 7:
+				cin >> m1;
+				seqlist.Delete(m1);
+				break;
+			case 8:
+				seqlist.Print();
+				break;
+			case 9:
+				cin >> m1;
+				seqlist.LeftMove(m1);
+				break;
+			case 10:
+				seqlist.change();
+				break;
+			case 11:
+				seqlist.exchange();
+				break;
+			default:
+				cout << "无效命令" << endl;
+			}
+		}
+	}
+	return 0;
+}
