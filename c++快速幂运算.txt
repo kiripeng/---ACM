@@ -1,0 +1,25 @@
+#include<iostream>
+#include<cmath>
+#include<algorithm>
+using namespace std;
+int PowerMod(long long int a,long long  int b,long long  int c)
+{
+	long long int ans = 1;
+	a = a % c;
+	while (b>0) {
+		if (b % 2 == 1)
+			ans = (ans * a) % c;
+		b = b / 2;
+		a = (a * a) % c;
+	}
+	return ans;
+}
+int main() {
+	long long int n;
+	while (cin >> n)
+	{
+		cout << PowerMod(2,n,100000)<<endl;
+	}
+	return 0;
+}
+
