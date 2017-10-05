@@ -1,0 +1,61 @@
+#include<iostream>
+#include<algorithm>
+#include<functional>
+using namespace std;
+int s[65];
+bool vis[65];
+int n;
+int sum;
+int len;
+int flag;
+void dfs(int cnt, int l, int pos) {
+	if (flag) return;
+	if (l == 0) {
+		for (int i = 0; i < n; i++)
+		{
+			if (!vis[i]) {
+				vis[i] = 1;
+				dfs(cnt + 1, s[i], i + 1);
+				vis[i] = 0;
+				break;
+			}
+		}
+	}
+	else if (l == len) {
+		if (cnt == n) flag = 1;
+		else dfs(cnt, 0, 0);
+	}
+	else{
+		for (int i = pos; i < n; i++) {
+			if (!vis[i] && l + s[i] <= len) {
+				if (!vis[i - 1] && s[i] == s[i - 1]) continue;
+				vis[i] = 1;
+				dfs(cnt + 1, l + s[i], i + 1);
+				vis[i] = 0;
+			}
+		}
+	}
+}
+int main() {
+	while (cin >> n) {
+		if (n == 0) break;
+		sum = 0;
+		for (int i = 0; i < n; i++) {
+			cin >> s[i];
+			sum += s[i];
+		}
+		sort(s, s + n, greater<int>());
+		flag = 0;
+		for (len = s[0]; len <= sum; len++) {
+			if (sum%len == 0) {
+				memset(vis, 0, sizeof(vis));
+				dfs(0, 0, 0);				
+			}
+			if (flag) {
+					cout << len << endl;
+					break;
+				}
+		}
+	}
+	return 0;
+}
